@@ -1,6 +1,7 @@
 package com.example.todo.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class Repository(private val dao: DAO) {
     suspend fun addToDo(toDo: ToDo) {
@@ -24,7 +25,11 @@ class Repository(private val dao: DAO) {
     }
 
     fun getToDo(id: Long): Flow<ToDo> {
-        return dao.getToDo(id = id)
+        return dao.getToDo(id)
+            .map {
+                it ?: ToDo(0L, "", false)
+            }
     }
+
 
 }

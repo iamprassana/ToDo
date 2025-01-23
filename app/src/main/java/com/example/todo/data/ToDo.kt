@@ -9,8 +9,8 @@ data class ToDo(
     @PrimaryKey(autoGenerate = true)
     val id : Long = 0L,
     @ColumnInfo(name = "TodoTitle")
-    var title : String,
+    var title : String = "",
     @ColumnInfo(name = "CheckBox")
-    var isChecked : Boolean
+    var isChecked : Boolean = false
 )
 

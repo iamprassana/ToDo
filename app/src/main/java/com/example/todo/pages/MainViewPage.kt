@@ -1,11 +1,8 @@
 package com.example.todo.pages
 
 import AppViewModel
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +20,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -41,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -81,7 +77,7 @@ fun MainPageView(navHostController: NavHostController, viewModel: AppViewModel) 
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ItemViewer(
     paddingValues: PaddingValues,
@@ -94,10 +90,7 @@ fun ItemViewer(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
-            .clickable {
-                navController.navigate("${Screens.AddUpdate.route}/1")
-            }
+            .padding(paddingValues),
     ) {
 
         items(todoList.value, key = { todo ->
@@ -120,23 +113,26 @@ fun ItemViewer(
                 state = state,
                 backgroundContent = {},
                 enableDismissFromEndToStart = true,
-                enableDismissFromStartToEnd = false
-            ) {
-                ItemDesign(todo, viewModel)
-
-            }
+                enableDismissFromStartToEnd = false,
+                content = {
+                    ItemDesign(todo, viewModel) {
+                        val id = todo.id
+                        navController.navigate("${Screens.AddUpdate.route}/${id}")
+                    }
+                }
+            )
         }
     }
 }
 
 @Composable
-fun ItemDesign(todo: ToDo, viewModel: AppViewModel) {
+fun ItemDesign(todo: ToDo, viewModel: AppViewModel, onClick: () -> Unit) {
 
 
     Card(
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(colorResource(R.color.card)),
-        modifier = Modifier.fillMaxWidth(0.9f),
+        modifier = Modifier.fillMaxWidth(0.9f).clickable { onClick() },
 
         ) {
         Row(
@@ -161,11 +157,23 @@ fun ItemDesign(todo: ToDo, viewModel: AppViewModel) {
 
                 )
 
-            Text(
-                todo.title,
-                style = TextStyle(fontSize = 22.sp, fontFamily = FontFamily.Monospace),
-                color = colorResource(R.color.appBar)
-            )
+
+            if (todo.isChecked) {
+                Text(
+                    todo.title,
+                    style = TextStyle(fontSize = 22.sp, fontFamily = FontFamily.Monospace),
+                    color = colorResource(R.color.appBar),
+                    textDecoration = TextDecoration.LineThrough
+                )
+            } else {
+                Text(
+                    todo.title,
+                    style = TextStyle(fontSize = 22.sp, fontFamily = FontFamily.Monospace),
+                    color = colorResource(R.color.appBar),
+                    textDecoration = TextDecoration.None
+                )
+            }
+
         }
     }
 }

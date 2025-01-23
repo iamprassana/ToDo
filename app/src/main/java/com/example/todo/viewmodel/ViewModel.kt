@@ -7,6 +7,7 @@ import com.example.todo.data.Graph
 import com.example.todo.data.Repository
 import com.example.todo.data.ToDo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class AppViewModel(private val todoRep : Repository = Graph.toDoRep) : ViewModel() {
@@ -55,5 +56,6 @@ class AppViewModel(private val todoRep : Repository = Graph.toDoRep) : ViewModel
 
     fun getToDoById(id : Long) : Flow<ToDo> {
         return todoRep.getToDo(id)
+            .map { it ?: ToDo(0L, "", false) }
     }
 }
