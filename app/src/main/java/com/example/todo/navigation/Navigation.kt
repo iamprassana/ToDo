@@ -8,8 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.todo.pages.AddUpdateToDo
+import com.example.todo.pages.AddUpdate2
+//import com.example.todo.pages.AddUpdateToDo
 import com.example.todo.pages.MainPageView
+import com.example.todo.pages.PriorityScreen
 import com.example.todo.pages.Screens
 
 @Composable
@@ -35,8 +37,17 @@ fun Navigation() {
 
             val id =if(it.arguments != null) it.arguments!!.getLong("id") else 0L
 
-            AddUpdateToDo(navController,id, viewModel)
+            AddUpdate2(navController,id, viewModel)
 
+        }
+
+        composable(route = Screens.PriorityScreen.route + "/{priority}") {
+
+            val priority = it.arguments!!.getString("priority")
+
+            if (priority != null) {
+                PriorityScreen(priority = priority , navController, viewModel)
+            }
         }
     }
 

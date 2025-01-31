@@ -4,4 +4,5 @@ sealed class Screens(val route : String) {
 
     object MainPage : Screens("mainPage")
     object AddUpdate : Screens("addPage")
+    object PriorityScreen : Screens("priority")
 }

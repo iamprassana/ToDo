@@ -1,17 +1,13 @@
 package com.example.todo.pages
 
 import AppViewModel
+import android.graphics.Paint.Align
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
@@ -23,19 +19,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
@@ -47,10 +44,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -70,9 +65,10 @@ fun MainPageView(navHostController: NavHostController, viewModel: AppViewModel) 
 
 
     Scaffold(
-        topBar = { AppBar("ToDo") },
+        topBar = { AppBar(navHostController, "ToDo") },
         modifier = Modifier.fillMaxSize(),
         containerColor = colorResource(R.color.page),
+
         floatingActionButton = {
             AnimatedVisibility(
                 visible = true,
@@ -97,7 +93,10 @@ fun MainPageView(navHostController: NavHostController, viewModel: AppViewModel) 
             }
         }
     ) {
-        ItemViewer(it, viewModel, navHostController)
+        Row() {
+            ItemViewer(it, viewModel, navHostController)
+        }
+
 
     }
 }
@@ -149,7 +148,7 @@ fun ItemViewer(
                     animationSpec = tween(600)
                 ),
                 exit = slideOutVertically(
-                    targetOffsetY = {it},
+                    targetOffsetY = { it },
                     animationSpec = tween(500)
                 ) + fadeOut(
                     animationSpec = tween(600)
@@ -183,18 +182,19 @@ fun ItemDesign(todo: ToDo, viewModel: AppViewModel, onClick: () -> Unit) {
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(colorResource(R.color.card)),
         modifier = Modifier
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth(0.95f)
             .clickable { onClick() },
 
         ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(19.dp),
+                .wrapContentSize(align = Alignment.Center)
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
             Checkbox(
+                modifier = Modifier.padding(top = 18.dp, end = 10.dp, start = 10.dp),
                 checked = todo.isChecked,
                 onCheckedChange = { isChecked ->
                     viewModel.onCheckedChange(isChecked)
@@ -206,26 +206,27 @@ fun ItemDesign(todo: ToDo, viewModel: AppViewModel, onClick: () -> Unit) {
                     checkmarkColor = colorResource(R.color.white),
                     uncheckedColor = colorResource(R.color.page)
                 ),
-
-                )
+            )
 
 
             if (todo.isChecked) {
                 Text(
                     todo.title,
-                    style = TextStyle(fontSize = 22.sp, fontFamily = FontFamily.Monospace),
+                    style = TextStyle(fontSize = 23.sp, fontFamily = FontFamily.Monospace),
                     color = colorResource(R.color.appBar),
-                    textDecoration = TextDecoration.LineThrough
+                    textDecoration = TextDecoration.LineThrough,
+                    modifier = Modifier.padding(top = 10.dp)
                 )
             } else {
                 Text(
                     todo.title,
-                    style = TextStyle(fontSize = 22.sp, fontFamily = FontFamily.Monospace),
+                    style = TextStyle(fontSize = 23.sp, fontFamily = FontFamily.Monospace),
                     color = colorResource(R.color.appBar),
-                    textDecoration = TextDecoration.None
+                    textDecoration = TextDecoration.None,
+                    modifier = Modifier.padding(top = 10.dp)
                 )
             }
-
         }
+
     }
 }

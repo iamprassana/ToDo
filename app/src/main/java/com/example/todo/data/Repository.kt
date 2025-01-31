@@ -27,8 +27,13 @@ class Repository(private val dao: DAO) {
     fun getToDo(id: Long): Flow<ToDo> {
         return dao.getToDo(id)
             .map {
-                it ?: ToDo(0L, "", false)
+                it ?: ToDo(0L, "", false, "")
             }
+    }
+
+    fun getByPriority(priority : String) : Flow<List<ToDo>> {
+        return dao.getSep(priority)
+
     }
 
 

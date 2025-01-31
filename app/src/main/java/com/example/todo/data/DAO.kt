@@ -30,4 +30,7 @@ abstract class DAO{
     @Query("select * from `ToDo` where id =:id")
     abstract  fun getToDo(id : Long) : Flow<ToDo>
 
+    @Query("select * from `ToDo` where priority =:priority")
+    abstract fun getSep(priority : String) : Flow<List<ToDo>>
+
 }

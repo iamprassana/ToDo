@@ -11,6 +11,8 @@ data class ToDo(
     @ColumnInfo(name = "TodoTitle")
     var title : String = "",
     @ColumnInfo(name = "CheckBox")
-    var isChecked : Boolean = false
+    var isChecked : Boolean = false,
+    @ColumnInfo(name = "priority" , defaultValue = "")
+    var priority : String = ""
 )
 
